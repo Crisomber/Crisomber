@@ -1,15 +1,18 @@
 # Vita Café · sitio web (HTML + CSS + JS)
 
-Abre `index.html` con doble clic. No hace falta servidor ni base de datos.
+**En línea:** https://crisomber.github.io/crisomber/vita-cafe/
+
+No usa base de datos. Para probarlo en tu compu ábrelo con un servidor local (por ejemplo, la extensión
+*Live Server* de VS Code o `python3 -m http.server`), porque el navegador no deja leer `menu.json` con doble clic.
 
 ## Estructura
 ```
 vita-cafe/
 ├── index.html        Una sola página: Inicio · Menú · Conóceme · Contacto
 ├── css/styles.css    Estilos, paleta del diseño y animaciones
+├── data/menu.json    Catálogo del menú en JSON (categorías, productos, precios, opciones)
 ├── img/              Imágenes extraídas y optimizadas del PDF
 └── js/
-    ├── data.js       Catálogo del menú en formato JSON (productos, precios, opciones)
     ├── store.js      "Base de datos" simulada con localStorage (carrito y pedidos)
     ├── animations.js Animaciones al hacer scroll (IntersectionObserver)
     └── app.js        Navegación, menú, carrito, checkout y ticket
@@ -18,7 +21,7 @@ vita-cafe/
 ## ¿Cómo se simula el pedido sin base de datos?
 | Qué | Dónde | Por qué |
 |---|---|---|
-| Menú (sólo lectura) | `js/data.js`, objeto con forma de JSON | Fácil de editar; funciona sin servidor (fetch de un `.json` falla con `file://`) |
+| Menú (sólo lectura) | `data/menu.json`, cargado con `fetch()` | Es justo lo que devolvería una API; para cambiar el menú sólo editas este archivo |
 | Carrito y pedidos | `localStorage` (`vita_carrito`, `vita_pedidos`) | Persiste al recargar, como si fueran tablas |
 | Estado del pedido | Calculado por tiempo: Recibido → En preparación (20 s) → Listo (60 s) | Simula la cocina |
 | Ticket | Botón "Descargar ticket (.json)" | Muestra el registro tal como lo recibiría un backend |

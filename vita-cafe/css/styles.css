@@ -226,6 +226,9 @@ button, input, select { font: inherit; color: inherit; }
 .product__price { font-weight: 700; color: var(--brown); white-space: nowrap; }
 .product p { margin: 0; color: var(--muted); font-size: .95rem; flex: 1; }
 .product__foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 6px; }
+.menu-error { grid-column: 1 / -1; background: var(--cream); border-left: 4px solid var(--brown); border-radius: var(--radius); padding: 20px 24px; }
+.menu-error p { margin: 6px 0 0; color: var(--muted); }
+.menu-error code { background: var(--beige-light); padding: 1px 6px; border-radius: 4px; }
 .tags { display: flex; flex-wrap: wrap; gap: 6px; }
 .tag { font-size: .72rem; padding: 2px 9px; border-radius: 999px; background: rgba(75, 90, 58, .13); color: var(--green-dark); font-weight: 600; }
 

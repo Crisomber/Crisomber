@@ -2,16 +2,16 @@
    APP PRINCIPAL: navegación, menú, carrito y pedidos
    ========================================================= */
 (function () {
-  const MENU  = window.VITA_MENU;
   const Store = window.VitaStore;
+  let MENU;     // se llena al cargar data/menu.json
   const $  = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 
-  const dinero = new Intl.NumberFormat("es-MX", { style: "currency", currency: MENU.moneda });
+  let dinero;
   const fmt = n => dinero.format(n);
   const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
-  let categoriaActiva = MENU.categorias[0].id;
+  let categoriaActiva;
 
   /* =============== NAVEGACIÓN =============== */
   function initNav() {
@@ -371,17 +371,44 @@
     document.addEventListener("keydown", e => { if (e.key === "Escape") cerrarPaneles(); });
   }
 
+  /* =============== CARGA DEL MENÚ (JSON) =============== */
+  async function cargarMenu() {
+    const res = await fetch("data/menu.json", { cache: "no-cache" });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    return res.json();
+  }
+
+  function errorMenu() {
+    $("#productos").innerHTML = `
+      <div class="menu-error">
+        <strong>No se pudo cargar el menú.</strong>
+        <p>El menú vive en <code>data/menu.json</code> y el navegador no permite leerlo si abres
+        el archivo con doble clic. Ábrelo desde el enlace de GitHub Pages o con un servidor local
+        (por ejemplo, la extensión <em>Live Server</em> de VS Code).</p>
+      </div>`;
+  }
+
   /* =============== ARRANQUE =============== */
-  document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener("DOMContentLoaded", async () => {
     $("#anio").textContent = new Date().getFullYear();
+    window.VitaAnimations.init();
+    initNav();
+    initEventos();
+
+    try {
+      MENU = await cargarMenu();
+    } catch (e) {
+      console.warn("Menú no disponible:", e);
+      errorMenu();
+      return;
+    }
+    dinero = new Intl.NumberFormat("es-MX", { style: "currency", currency: MENU.moneda });
+    categoriaActiva = MENU.categorias[0].id;
     const contador = $('[data-count="18"]');
     if (contador) contador.dataset.count = MENU.productos.length;
 
-    window.VitaAnimations.init();
-    initNav();
     renderCategorias();
     renderProductos();
     actualizarCarrito();
-    initEventos();
   });
 })();
